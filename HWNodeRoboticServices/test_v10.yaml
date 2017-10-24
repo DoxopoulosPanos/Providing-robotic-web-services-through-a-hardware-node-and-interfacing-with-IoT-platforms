@@ -1,0 +1,2087 @@
+swagger: '2.0'
+
+#####################################################################
+#                  REST Server's Information                        #
+#####################################################################
+info:
+  version: 1.0.0
+  title: RobotServices
+  description: An API that will provide Services for robots through a RPi
+  contact:
+      name: Support
+      email: "doxopana@auth.gr"
+schemes:
+  - https
+  - http
+
+#####################################################################
+#                        Paths - Services                           #
+#####################################################################
+
+paths:
+
+  #########################     gTTS        ########################
+  /gTTS/text2sound:
+    get:
+      tags:
+        - gTTS
+      description: |
+        It converts the text to sound.
+        It is required a text and the language of the text.
+      operationId: gTTS
+      consumes:
+        - application/json
+      produces:
+        - audio/mpeg
+      parameters:
+        - name: text
+          in: query
+          description: text
+          required: true
+          type: string
+        - name: lang
+          in: query
+          description: Language (en=english)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: mp3_file
+            type: file
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  ######################       RAPP       ###########################
+  /Rapp/Geolocation:
+    get:
+      tags:
+        - RappGeolocation
+      description: >-
+        Returns Geolocation (city,zip code, country, timezone, latitide,
+        longtitude, region), by giving IP.
+      produces:
+        - application/json
+      operationId: RappGeolocation
+      parameters:
+        - name: ip
+          in: query
+          description: Give an IP
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappGeolocation'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/qrDetection:
+    post:
+      tags:
+        - RappQrDetection
+      description: |
+        Returns the content of a Qr code, a type of 2 dimensional barcode.
+        An image is required as an input.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: RappQrDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappQrDetection'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/humanDetection:
+    post:
+      tags:
+        - RappHumanDetection
+      description: |
+        Returns the up_left_point and the down_right_point of detected humans.
+        An image is required as an input.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: RappHumanDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappHumanDetection'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/faceDetection:
+    post:
+      tags:
+        - RappFaceDetection
+      description: |
+        Returns the up_left_point and the down_right_point of detected faces.
+        An image is required as an input.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: RappFaceDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappFaceDetection'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/hazardDetection/Lights:
+    post:
+      tags:
+        - RappLightDetection
+      description: |
+        Returns the detected light level of an image.
+        An image is required as an input.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: RappLightDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappLightDetection'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/hazardDetection/Door:
+    post:
+      tags:
+        - RappDoorDetection
+      description: |
+        Returns the angle of the detected door in an image.
+        An image is required as an input.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: RappDoorDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappDoorDetection'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/ObjectRecognitionCaffe:
+    post:
+      tags:
+        - RappObjectRecCaffe
+      description: |
+        Returns the recognized object class.
+        An image is required as an input.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: RappObjectRecCaffe
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappCaffe'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/weatherReport/Current:
+    get:
+      tags:
+        - RappWeatherCurrent
+      description: |
+        Returns the current weather report in a city.
+        A name of a city is required.
+      produces:
+        - application/json
+      operationId: RappWeatherCurrent
+      parameters:
+        - name: city
+          in: query
+          description: Name of a city
+          required: true
+          type: string
+        - name: weatherReporter
+          in: query
+          description: >-
+            Optional parameter. Define the weather API to use. Possible values
+            are "yweather" and "forecastio". Default is "yweather".
+          required: false
+          type: string
+          default: ''
+        - name: metric
+          in: query
+          description: >-
+            Optrional parameter. The return value units. It should be an
+            integer.
+          required: false
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappWeatherCurrent'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/weatherReport/Forecast:
+    get:
+      tags:
+        - RappWeatherForecast
+      description: |
+        Returns the weather forecast in a city.
+        A name of a city is required.
+      produces:
+        - application/json
+      operationId: RappWeatherForecast
+      parameters:
+        - name: city
+          in: query
+          description: Name of a city
+          required: true
+          type: string
+        - name: weatherReporter
+          in: query
+          description: >-
+            Optional parameter. Define the weather API to use. Possible values
+            are "yweather" and "forecastio". Default is "yweather".
+          required: false
+          type: string
+          default: ''
+        - name: metric
+          in: query
+          description: >-
+            Optrional parameter. The return value units. It should be an
+            integer.
+          required: false
+          type: integer
+          default: 0
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappWeatherForecast'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/text2speech:
+    get:
+      tags:
+        - RappText2Speech
+      description: |
+        Convert text to audio and returns the audio file.
+        A text is required as an input.
+      produces:
+        - audio/mpeg
+      operationId: RappText2Speech
+      parameters:
+        - name: text
+          in: query
+          description: Text to convert
+          required: true
+          type: string
+        - name: language
+          in: query
+          description: >-
+            Language of the text. Possible values are 'en' = english and 'el' =
+            greek.
+          required: false
+          type: string
+          default: en
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: audioFile
+            type: file
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/SpeechDetectionGoogle:
+    post:
+      tags:
+        - RappSpeechDetectionGoogle
+      description: >
+        Returns the words/sentences found in an audio file. Returns also
+        alternatives sentences.
+
+        An audio file is required as an input.
+      consumes:
+        - application/form-data
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: RappSpeechDetectionGoogle
+      parameters:
+        - name: audioString
+          in: query
+          description: Upload an audio file as a string (base64)
+          required: false
+          type: string
+        - name: audio_file
+          in: formData
+          description: Upload an audio file
+          required: false
+          type: file
+        - name: language
+          in: query
+          description: >-
+            Language to be used by service. Possible values are 'gr' = greek and
+            'en' = english.
+          required: false
+          type: string
+          default: en
+        - name: audioSource
+          in: query
+          description: The source from the audio (e.g. 'nao_wav_1_ch').
+          type: string
+          default: headset
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappSpeechDetectionGoogle'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Rapp/SpeechDetectionSphinx:
+    post:
+      tags:
+        - RappSpeechDetectionSphinx
+      description: >
+        Returns the words/sentences found in an audio file. Returns also
+        alternatives sentences. An audio file is required as an input.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: RappSpeechDetectionSphinx
+      parameters:
+        - name: audioString
+          in: query
+          description: Upload an audio file as a string (base64).
+          required: false
+          type: string
+        - name: audioFile
+          in: formData
+          description: Upload an audio file
+          required: false
+          type: file
+        - name: language
+          in: query
+          description: >-
+            Language to be used by service. Possible values are 'gr' = greek and
+            'en' = english.
+          required: false
+          type: string
+          default: en
+        - name: audioSource
+          in: query
+          description: The source from the audio (e.g. 'nao_wav_1_ch').
+          type: string
+          default: headset
+        - name: words
+          in: query
+          description: A vector that carries the words to search for into the voice-audio-source.
+          type: array
+          items:
+            type: string
+        - name: sentences
+          in: query
+          description: The under consideration sentences.
+          type: array
+          items:
+            type: string
+        - name: grammar
+          in: query
+          description: Grammars to use in speech recognition.
+          type: array
+          items:
+            type: string
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/RappSpeechDetectionSphinx'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  ###################       tesseract      ######################
+  /tesseract:
+    post:
+      tags:
+        - tesseract
+      summary: an OCR engine
+      description: |
+        It is an Optical Character recognizer.
+        It converts the characters of an image to text.
+        It is required an image as an input.
+      operationId: tesseract
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/text
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: response
+            type: string
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  ###################       Mashape       ######################
+  /Mashape/WeatherAPI:
+    get:
+      tags:
+        - MashapeWeatherAPI
+      summary: A weather API
+      description: >-
+        It is required the latitude and the longitude. It returns information
+        about the current weather.
+      consumes:
+        - application/json
+      produces:
+        - text/plain
+      operationId: MashapeWeatherAPI
+      parameters:
+        - name: lat
+          in: query
+          description: latitude
+          required: false
+          type: string
+        - name: lng
+          in: query
+          description: longtitude
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successful Weather response
+          schema:
+            title: response
+            type: string
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Mashape/FaceRect:
+    post:
+      tags:
+        - MashapeFaceRect
+      summary: A face detection API
+      description: >-
+        It finds faces, both frontal and profile. An image file is required as
+        an input.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: MashapeFaceRect
+      parameters:
+        - name: features
+          in: query
+          description: >-
+            Specifies if you need to find face features (eyes, nose and mouth).
+            If set to "true", the API will search for face features within faces
+            detected (for frontal faces only).
+          required: false
+          type: boolean
+          default: false
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/MashapeFaceRect'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Mashape/Systran/Translate:
+    get:
+      tags:
+        - MashapeTranslateAPI
+      summary: A translation API
+      description: >-
+        It is required a string as an input for translation, the source and the target language. It returns string.
+      produces:
+        - application/json
+      operationId: MashapeTranslateAPI
+      parameters:
+        - name: text
+          in: query
+          description: A string to translate
+          required: true
+          type: string
+        - name: source
+          in: query
+          description: A code (string) for the source language. ('en','el','de','es','fr',...)
+          required: false
+          type: string
+          default: auto
+        - name: target
+          in: query
+          description: A code (string) for the target language. ('en','el','de','es','fr',...)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/MashapeSystranTranslate'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Mashape/Systran/LanguageIdentification:
+    get:
+      tags:
+        - MashapeLanguageIdentificationAPI
+      summary: An API to identify language
+      description: >-
+        It is required a string as an input. It returns code of detected language (string).
+      produces:
+        - application/json
+      operationId: MashapeLanguageIdentificationAPI
+      parameters:
+        - name: text
+          in: query
+          description: A string to identify language
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/MashapeSystranLanguageIdentification'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Mashape/Systran/NameEntities:
+    get:
+      tags:
+        - MashapeNameEntitiesAPI
+      summary: An API to extract Name Entities. Especially locations.
+      description: >-
+        It is required a string as an input and the source language. It returns string.
+      produces:
+        - application/json
+      operationId: MashapeNameEntitiesAPI
+      parameters:
+        - name: text
+          in: query
+          description: A string to extract Name Entities.
+          required: true
+          type: string
+        - name: lang
+          in: query
+          description: A code (string) for the source language. ('en','el','de','es','fr',...)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful name extraction.
+          schema:
+            title: response
+            type: string
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Mashape/RemindersNLP:
+    get:
+      tags:
+        - MashapeRemindersNLPAPI
+      summary: A natural language (NLP) reminder and event scheduling API.
+      description: >-
+        It is required a string as an input. It returns json.
+      produces:
+        - application/json
+      operationId: MashapeRemindersNLPAPI
+      parameters:
+        - name: phrase
+          in: query
+          description: A phrase (string) to be analyzed.
+          required: true
+          type: string
+        - name: timezone
+          in: query
+          description: A time zone of the requesting client.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/MashapeRemindersNLP'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Mashape/Sentiment:
+    get:
+      tags:
+        - MashapeSentimentAPI
+      summary: It estimates the sentiment in a phrase.
+      description: >-
+        It is required a string as an input. It returns the sentiment and the confidence.
+      produces:
+        - application/json
+      operationId: MashapeSentimentAPI
+      parameters:
+        - name: txt
+          in: query
+          description: A phrase (text) to be analyzed.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/MashapeSentiment'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Mashape/BreakingNews/news:
+    get:
+      tags:
+        - MashapeBreakingNews
+      summary: Get all Breaking News
+      produces:
+        - application/json
+      operationId: MashapeBreakingNews
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/MashapeBreakingNews'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Mashape/BreakingNews/news/{symbol}:
+    get:
+      tags:
+        - MashapeBreakingNewsSymbol
+      summary: Company's specific breaking news
+      description: >-
+        It is required a Symbol (string) of a company as an input.
+      produces:
+        - application/json
+      operationId: MashapeBreakingNewsSymbol
+      parameters:
+        - name: symbol
+          in: path
+          description: A symbol of a company which provides news.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/MashapeBreakingNews'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Mashape/Newsalyze:
+    get:
+      tags:
+        - MashapeNewsalyze
+      summary: Article extraction
+      description: >-
+        CrawlAndExtractArticle. This method extracts the following dimensions from the article given by the parameter url: title, lead paragraph, main text content, publish date, authors, and language.
+      produces:
+        - application/json
+      operationId: MashapeNewsalyze
+      parameters:
+        - name: url
+          in: query
+          description: The url of the article.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful response.
+          schema:
+            $ref: '#/definitions/MashapeNewsalyze'
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  ####################       Angus      ########################
+  /Angus/text2sound:
+    get:
+      tags:
+        - AngusText2Sound
+      description: |
+        Convert text to audio and returns the audio file.
+        A text is required as an input.
+      consumes:
+        - application/text
+      produces:
+        - audio/mpeg
+      operationId: AngusText2Sound
+      parameters:
+        - name: text
+          in: query
+          description: Text to convert
+          required: true
+          type: string
+        - name: lang
+          in: query
+          description: |
+            Language of the text. Possible values are:
+            'en-US' = english (US)  \n
+            'en-GB' = english (GB)  \n
+            'de-DE' = German        \n
+            'es-ES' = Spanish (ES)  \n
+            'fr-FR' = French        \n
+            'it=IT' = Italian       \n
+          required: false
+          type: string
+          default: en-US
+      responses:
+        '201':
+          description: Successful response
+          schema:
+            title: audio_file
+            type: file
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Angus/Gender:
+    post:
+      tags:
+        - AngusGender
+      summary: Age and Gender Detection
+      description: |
+        Detect faces, estimate age and gender.
+        It is required an image as an input.
+      operationId: AngusGender
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AngusGender"
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Angus/Expression:
+    post:
+      tags:
+        - AngusExpression
+      summary: Face expression estimation
+      description: |
+        Estimates the expression of detected faces.
+        An image is required as an input.
+      operationId: AngusExpression
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AngusExpression"
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  ######################       OpenCV        #########################
+  /OpenCV/faceDetection:
+    post:
+      tags:
+        - OpenCVFaceDetection
+      description: |
+        Detects faces and eyes.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: OpenCVFaceDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - name: eyeDetection
+          in: query
+          description: 'TRUE if you need eyes to be detected. Default is FALSE.'
+          required: false
+          type: boolean
+          default: false
+        - name: smileDetection
+          in: query
+          description: 'TRUE if you need smile to be detected. Default is FALSE.'
+          required: false
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /OpenCV/eyesDetection:
+    post:
+      tags:
+        - OpenCVeyesDetection
+      description: |
+        Detects eyes.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: OpenCVEyesDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /OpenCV/smileDetection:
+    post:
+      tags:
+        - OpenCVsmileDetection
+      description: |
+        Detects smile.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: OpenCVSmileDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /OpenCV/bodyDetection:
+    post:
+      tags:
+        - OpenCVbodyDetection
+      description: |
+        Detects body.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: OpenCVBodyDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  ########################       zbar       ##########################
+  /zbar:
+    post:
+      tags:
+        - zbar
+      summary: ZBar is an open-source C barcode reading library.
+      description: >
+        Returns the content of a Qr code. Qr code is a type of a 2 dimensional
+        barcode.
+
+        An image is required as an input.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: zbar
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            title: response
+            type: string
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  ######################       Algorithmia      ########################
+  /Algorithmia/OpenCV/faceDetection:
+    post:
+      tags:
+        - AlgorithmiaOpenCVfaceDetection
+      description: |
+        Detects faces. Using proxy service OpenCV (http://algorithmia.com)
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: AlgorithmiaOpenCVFaceDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Algorithmia/OpenCV/eyesDetection:
+    post:
+      tags:
+        - AlgorithmiaOpenCVeyesDetection
+      description: |
+        Detects eyes.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: AlgorithmiaOpenCVEyesDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Algorithmia/OpenCV/smileDetection:
+    post:
+      tags:
+        - AlgorithmiaOpenCVsmileDetection
+      description: |
+        Detects smile. Using proxy service OpenCV (http://algorithmia.com)
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: AlgorithmiaOpenCVSmileDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Algorithmia/OpenCV/bodyDetection:
+    post:
+      tags:
+        - AlgorithmiaOpenCVbodyDetection
+      description: |
+        Detects bodies of people. Using proxy service OpenCV (http://algorithmia.com)
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: AlgorithmiaOpenCVBodyDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Algorithmia/deeplearning/AgeDetection:
+    post:
+      tags:
+        - AlgorithmiaDeepLearningAgeDetection
+      description: |
+        Detects the age of people in an image.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: AlgorithmiaDeepLearningAgeDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AlgorithmiaDeepLearningAge"
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Algorithmia/deeplearning/GenderDetection:
+    post:
+      tags:
+        - AlgorithmiaDeepLearningGenderDetection
+      description: |
+        Detects gender of people in an image.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: AlgorithmiaDeepLearningGenderDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AlgorithmiaDeepLearningGender"
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Algorithmia/deeplearning/ObjectDetection:
+    post:
+      tags:
+        - AlgorithmiaDeepLearningObjectDetection
+      description: |
+        Detects objects in  an image.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: AlgorithmiaDeepLearningObjectDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AlgorithmiaDeepLearningObject"
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Algorithmia/dlib/FaceDetection:
+    post:
+      tags:
+        - AlgorithmiaDlibFaceDetection
+      description: |
+        Detects faces.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: AlgorithmiaDlibFaceDetection
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: "#/definitions/AlgorithmiaDlibFace"
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Algorithmia/tesseract/OCR:
+    post:
+      tags:
+        - AlgorithmiaOCR
+      description: |
+        Detects characters in an image.
+        An image is required as an input. Returns JSON.
+      consumes:
+        - application/json
+        - multipart/form-data
+      produces:
+        - application/json
+      operationId: AlgorithmiaOCR
+      parameters:
+        - $ref: "#/parameters/image_string"
+        - $ref: "#/parameters/image"
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: string
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+  /Algorithmia/nlp/SentimentAnalysis:
+    get:
+      tags:
+        - AlgorithmiaSentiment
+      description: |
+        Detects Sentiment level in a sentence.
+        Accepted input is a JSON Object with the key "document", which contains a sentence or paragraph. Returns JSON.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      operationId: AlgorithmiaSentiment
+      parameters:
+        - name: text
+          in: query
+          description: A JSON Object with the key "document", which contains a sentence or paragraph.
+          required: true
+          type: string
+        - $ref: "#/parameters/Algorithmia_key"
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            type: number
+            title: response
+        '204':
+          description: Error 204. No Content.
+        '400':
+          description: Error 400. Bad Request.
+        '404':
+          description: Error 404. Not Found.
+        '500':
+          description: Error 500. Internal Server Error.
+
+
+
+#####################################################################
+#                           parameters                              #
+#####################################################################
+
+parameters:
+
+  image_string:
+    name: imageString
+    in: query
+    description: Upload an image as a string (base64).
+    required: false
+    type: string
+
+  image:
+    name: image
+    in: formData
+    description: Upload an image
+    required: false
+    type: file
+
+  Algorithmia_key:
+    name: apiKey
+    in: query
+    description: Algorithmia Client Key for authorization.
+    required: true
+    type: string
+
+#####################################################################
+#                           definitions                             #
+#####################################################################
+
+definitions:
+
+  Error:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+
+  ArrayString:
+    type: array
+    items:
+      type: string
+
+  XY_centers:
+    type: object
+    properties:
+      "x":
+        type: integer
+      "y":
+        type: integer
+
+  centers:
+    type: array
+    items:
+      type: integer
+      maxItems: 2
+      minItems: 2
+
+  roi:
+    type: array
+    items:
+      type: integer
+      maxItems: 4
+      minItems: 4
+
+  boundaries:
+    type: object
+    properties:
+      "bottom":
+        type: number
+      "left":
+        type: number
+      "right":
+        type: number
+      "top":
+        type: number
+
+  gender:
+    type: string
+    enum:
+      - "male"
+      - "female"
+
+  up_down_points:
+    type: object
+    properties:
+      "up_left_point":
+        $ref: "#/definitions/XY_centers"
+      "down_right_point":
+        $ref: "#/definitions/XY_centers"
+
+  XY_width_height:
+    type: object
+    properties:
+      "x":
+        type: integer
+      "y":
+        type: integer
+      "width":
+        type: integer
+      "height":
+        type: integer
+
+  RappGeolocation:
+    type: object
+    properties:
+        "city":
+          type: string
+        "country":
+          type: string
+        "country_code":
+          type: string
+        "error":
+          type: string
+        "latitude":
+          type: number
+        "longtitude":
+          type: number
+        "region":
+          type: string
+        "timezone":
+          type: string
+        "zip":
+          type: string
+
+  RappQrDetection:
+    type: object
+    properties:
+      "error":
+        type: string
+      "qr_centers":
+        type: array
+        items:
+          $ref: "#/definitions/XY_centers"
+      "qr_messages":
+        type: array
+        items:
+          type: string
+
+  RappHumanDetection:
+    type: object
+    properties:
+      "humans":
+        type: array
+        items:
+          $ref: "#/definitions/up_down_points"
+
+  RappFaceDetection:
+    type: object
+    properties:
+      "faces":
+        type: array
+        items:
+          type: object
+          additionalProperties:
+            $ref: "#/definitions/up_down_points"
+
+  RappLightDetection:
+    type: object
+    properties:
+      "light_level":
+        type: integer
+      "error":
+        type: string
+
+  RappDoorDetection:
+    type: object
+    properties:
+      "door_angle":
+        type: integer
+      "error":
+        type: string
+
+  RappCaffe:
+    type: object
+    properties:
+      "object_class":
+        type: string
+      "error":
+        type: string
+
+  RappWeatherCurrent:
+    type: object
+    properties:
+      "date":
+        type: string
+      "temperature":
+        type: string
+      "weather_description":
+        type: string
+      "humidity":
+        type: string
+      "visibility":
+        type: string
+      "pressure":
+        type: string
+      "wind_speed":
+        type: string
+      "wind_temperature":
+        type: string
+      "wind_direction":
+        type: string
+      "error":
+        type: string
+
+  RappWeatherForecast:
+    type: object
+    properties:
+      "forecast":
+        type: array
+        items:
+          type: object
+          properties:
+            "high_temp":
+              type: string
+            "date":
+              type: string
+            "low_temp":
+              type: string
+            "description":
+              type: string
+
+  RappSpeechDetectionGoogle:
+    type: object
+    properties:
+      "words":
+        type: array
+        items:
+          type: string
+      "alternatives":
+        type: array
+        items:
+          type: array
+          items:
+            type: string
+      "error":
+        type: string
+
+  RappSpeechDetectionSphinx:
+    type: object
+    properties:
+      "words":
+        type: array
+        items:
+          type: string
+      "error":
+        type: string
+
+  MashapeFaceRect:
+    type: object
+    properties:
+      "faces":
+        type: array
+        items:
+          type: object
+          properties:
+            "orientation": string
+            $ref: "#/definitions/XY_width_height"
+            "features":
+              type: object
+              properties:
+                "eyes":
+                  type: array
+                  items:
+                    $ref: "#/definitions/XY_width_height"
+                    $ref: "#/definitions/XY_width_height"
+                "nose":
+                  $ref: "#/definitions/XY_width_height"
+                "mouth":
+                  $ref: "#/definitions/XY_width_height"
+            "image":
+               type: object
+               properties:
+                 "width":
+                   type: integer
+                 "height":
+                   type: integer
+
+  MashapeSystranTranslate:
+    type: object
+    properties:
+      "outputs":
+        type: array
+        items:
+          type: object
+          properties:
+            "output":
+              type: string
+
+  MashapeSystranLanguageIdentification:
+    type: object
+    properties:
+      "detectedLanguages":
+        type: array
+        items:
+          type: object
+          properties:
+            "confidence":
+              type: number
+              minimum: 0
+              maximum: 100
+            "lang":
+              type: string
+
+  MashapeRemindersNLP:
+    type: object
+    properties:
+        "type":
+          type: string
+        "status":
+          type: string
+        "hint":
+          type: string
+        "year":
+          type: string
+        "month":
+          type: string
+        "day":
+          type: string
+        "hour":
+          type: string
+        "minute":
+          type: string
+        "utcdate":
+          type: string
+        "action":
+          type: string
+        "body":
+          type: string
+        "utterance":
+          type: string
+        "reqtime":
+          type: string
+
+  MashapeSentiment:
+    type: object
+    properties:
+      "result":
+        type: object
+        properties:
+          "confidence":
+            type: number
+            minimum: 0
+            maximum: 100
+          "sentiment":
+            type: string
+
+  MashapeBreakingNews:
+    type: array
+    items:
+      type: object
+      properties:
+        "NewsID":
+          type: number
+        "Company":
+          type: object
+          properties:
+            "ID":
+              type: number
+            "Symbol":
+              type: string
+            "Name":
+              type: string
+            "ISIN":
+              type: string
+            "CIK":
+              type: string
+            "TradeCount":
+              type: number
+            "ViewCount":
+              type: number
+            "Stock":
+              type: string
+            "Stream":
+              type: string
+            "LogoPath":
+              type: string
+        "Symbol":
+          type: string
+        "Title":
+          type: string
+        "Content":
+          type: string
+        "Type":
+          type: number
+        "Created":
+          type: string
+        "URL":
+          type: string
+        "GeneratedURL":
+          type: string
+        "Duration":
+          type: string
+        "Comments":
+          $ref: "#/definitions/ArrayString"
+        "Likes":
+          $ref: "#/definitions/ArrayString"
+        "LikesCount":
+          type: number
+        "DislikesCount":
+          type: number
+        "CommentsCount":
+          type: number
+
+  MashapeNewsalyze:
+    type: object
+    properties:
+      "authors":
+        $ref: "#/definitions/ArrayString"
+      "date_download":
+        type: string
+      "date_modify":
+        type: string
+      "date_publish":
+        type: string
+      "description":
+        type: string
+      "filename":
+        type: string
+      "image_url":
+        type: string
+      "language":
+        type: string
+      "localpath":
+        type: string
+      "source_domain":
+        type: string
+      "text":
+        type: string
+      "title":
+        type: string
+      "title_page":
+        type: string
+      "title_rss":
+        type: string
+      "url":
+        type: string
+
+  AngusGender:
+    type: object
+    properties:
+      "input_size":
+        $ref: "#/definitions/centers"
+      "nb_faces":
+        type: integer
+      "faces":
+        type: array
+        items:
+          type: object
+          properties:
+            "roi":
+              $ref: "#/definitions/roi"
+            "roi_confidence":
+              type: number
+              minimum: 0
+              maximum: 1
+            "age":
+              type: integer
+            "age_confidence":
+              type: number
+              minimum: 0
+              maximum: 1
+            "gender":
+              $ref: "#/definitions/gender"
+            "gender_confidence":
+              type: number
+              minimum: 0
+              maximum: 1
+
+  AngusExpression:
+    type: object
+    properties:
+      "input_size":
+        $ref: "#/definitions/centers"
+      "nb_faces":
+        type: integer
+      "faces":
+        type: array
+        items:
+          type: object
+          properties:
+            "roi":
+              $ref: "#/definitions/roi"
+            "roi_confidence":
+              type: number
+              minimum: 0
+              maximum: 1
+            "neutral":
+              type: number
+              minimum: 0
+              maximum: 1
+            "happiness":
+              type: number
+              minimum: 0
+              maximum: 1
+            "surprise":
+              type: number
+              minimum: 0
+              maximum: 1
+            "anger":
+              type: number
+              minimum: 0
+              maximum: 1
+            "sadness":
+              type: number
+              minimum: 0
+              maximum: 1
+
+  AlgorithmiaDlibFace:
+    type: object
+    properties:
+      "images":
+        type: array
+        items:
+          type: object
+          properties:
+            "detected_faces":
+              type: array
+              items:
+                $ref: "#/definitions/boundaries"
+      "url":
+        type: string
+
+  AlgorithmiaDeepLearningAge:
+    type: object
+    properties:
+      "results":
+        type: array
+        items:
+          type: object
+          properties:
+            "age":
+              type: array
+              items:
+                type: object
+                properties:
+                  "ageRange":
+                    type: object
+                    properties:
+                      "max":
+                        type: integer
+                      "min":
+                        type: integer
+                  "confidence":
+                    type: number
+                    minimum: 0
+                    maximum: 1
+            "bbox":
+              $ref: "#/definitions/boundaries"
+            "person":
+              type: number
+
+  AlgorithmiaDeepLearningGender:
+    type: object
+    properties:
+      "results":
+        type: array
+        items:
+          type: object
+          properties:
+            "bbox":
+              $ref: "#/definitions/boundaries"
+            "gender":
+              type: array
+              items:
+                type: object
+                properties:
+                  "confidence":
+                    type: number
+                    minimum: 0
+                    maximum: 1
+                  "gender":
+                    $ref: "#/definitions/gender"
+            "person":
+              type: number
+
+  AlgorithmiaDeepLearningObject:
+    type: object
+    properties:
+      "results":
+        type: array
+        items:
+          type: object
+          properties:
+            "confidence":
+              type: number
+              minimum: 0
+              maximum: 1
+            "label":
+              type: string
