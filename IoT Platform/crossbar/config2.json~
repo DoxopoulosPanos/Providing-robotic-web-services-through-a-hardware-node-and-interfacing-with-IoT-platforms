@@ -1,0 +1,165 @@
+{
+    "version": 2,
+    "controller": {},
+    "workers": [
+        {
+            "type": "router",
+            "realms": [
+                {
+                    "name": "realm1",
+                    "roles": [
+                        {
+                            "name": "anonymous",
+                            "permissions": [
+                                {
+                                    "uri": "",
+                                    "match": "prefix",
+                                    "allow": {
+                                        "call": true,
+                                        "register": true,
+                                        "publish": true,
+                                        "subscribe": true
+                                    },
+                                    "disclose": {
+                                        "caller": false,
+                                        "publisher": false
+                                    },
+                                    "cache": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "transports": [
+                {
+                    "type": "web",
+                    "endpoint": {
+                        "type": "tcp",
+                        "port": 8008
+                    },
+                    "paths": {
+                        "/":{
+				"type": "reverseproxy",
+				"host": "http://0.0.0.0",
+                                "port": 8080,
+                                "path": "/"
+			},
+                        "ws": {
+                            "type": "websocket"
+                        },
+                        "call": {
+                            "type": "caller",
+                            "realm": "realm1",
+                            "role": "anonymous",
+                            "options": {
+                                "debug": true
+                            }
+                        },
+			"publish": {
+                     		"type": "publisher",
+                     		"realm": "realm1",
+                     		"role": "anonymous"
+                  	},
+			"RappGeolocation":{
+				"type": "redirect",
+				"url": "http://localhost:8080/Rapp/Geolocation" 
+			},
+                        "Proxy":{
+				"type": "reverseproxy",
+				"host": "http://localhost",
+                                "port": 8080, 
+                                "path": "/Rapp/Geolocation"
+			},
+                       
+                        "ProxyZbar":{
+				"type": "reverseproxy",
+				"host": "localhost:8080"
+			},
+                        "RappWeatherCurrent":{
+				"type": "redirect",
+				"url": "http://localhost:8080/Rapp/weatherReport/Current" 
+			},
+                        "RappWeatherForecast":{
+				"type": "redirect",
+				"url": "http://localhost:8080/Rapp/weatherReport/Forecast" 
+			},
+                        "MashapeWeather":{
+				"type": "redirect",
+				"url": "http://localhost:8080/Mashape/WeatherAPI" 
+			},
+                        "zbar":{
+				"type": "redirect",
+				"url": "http://localhost:8080/zbar" 
+			},
+			"webhook": {
+                            "type": "webhook",
+                            "realm": "realm1",
+                            "role": "anonymous",
+                            "options": {
+                                "topic": "com.myapp.rest"
+                            }
+                        },
+			"upload": {
+				"type":"upload",
+				"realm": "realm1",
+				"role": "anonymous",
+				"directory": "../uploaded",
+				"temp_directory": "../temp",
+               			"form_fields": {
+                  			"file_name": "resumableFilename",
+                  			"mime_type": "resumableType",
+                  			"total_size": "resumableTotalSize",
+                  			"chunk_number": "resumableChunkNumber",
+                  			"chunk_size": "resumableChunkSize",
+                  			"total_chunks": "resumableTotalChunks",
+                  			"content": "image",
+					"on_progress":"topic"
+				},
+				"options": {
+                                	"max_file_size": 200000000,
+                                	"file_permissions": "0644",
+                                	"file_types": [
+                                    		".csv",
+                                    		".txt",
+                                    		".pdf",
+                                    		".img",
+                                    		".png",
+                                    		".jpg"
+					]
+                    		}
+                	}
+		   }
+		}
+           ]
+        },
+        {
+            "type": "container",
+            "options": {
+                "pythonpath": [
+                    ".."
+                ]
+            },
+            "components": [
+                {
+                    "type": "class",
+                    "classname": "crossbar.adapter.rest.RESTCallee",
+                    "realm": "realm1",
+                    "extra": {
+                        "procedure": "com.myapp.rest",
+                        "baseurl": "http://localhost:8080"
+                    },
+                    "transport": {
+                        "type": "websocket",
+                        "endpoint": {
+                            "type": "tcp",
+                            "host": "127.0.0.1",
+                            "port": 8008
+                        },
+                        "url": "ws://127.0.0.1:8008/ws"
+                    }
+                }
+            ]
+        }
+    ]
+}

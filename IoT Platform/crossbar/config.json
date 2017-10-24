@@ -1,0 +1,263 @@
+{
+    "version": 2,
+    "controller": {},
+    "workers": [
+        {
+            "type": "router",
+            "realms": [
+                {
+                    "name": "realm1",
+                    "roles": [
+                        {
+                            "name": "anonymous",
+                            "permissions": [
+                                {
+                                    "uri": "",
+                                    "match": "prefix",
+                                    "allow": {
+                                        "call": true,
+                                        "register": true,
+                                        "publish": true,
+                                        "subscribe": true
+                                    },
+                                    "disclose": {
+                                        "caller": false,
+                                        "publisher": false
+                                    },
+                                    "cache": true
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "transports": [
+                {
+                    "type": "web",
+                    "endpoint": {
+                        "type": "tcp",
+                        "port": 8008
+                    },
+                    "paths": {
+                        "/": {
+                            "type": "static",
+                            "directory": "../web"
+                        },
+                        "ws": {
+                            "type": "websocket"
+                        },
+                        "call": {
+                            "type": "caller",
+                            "realm": "realm1",
+                            "role": "anonymous",
+                            "options": {
+                                "debug": true
+                            }
+                        },
+			"publish": {
+                     		"type": "publisher",
+                     		"realm": "realm1",
+                     		"role": "anonymous"
+                  	},
+                        "ProxyRPi":{
+				"type": "reverseproxy",
+				"host": "192.168.2.100",
+                                "port": 8080
+			},
+                        "ProxyMC":{
+				"type": "reverseproxy",
+				"host": "192.168.2.107",
+                                "port": 8080
+			},
+                        "ProxyPad1":{
+				"type": "reverseproxy",
+				"host": "192.168.2.245",
+                                "port": 8080
+			},
+                        "ProxyPad2":{
+				"type": "reverseproxy",
+				"host": "192.168.2.246",
+                                "port": 8080
+			},
+                        "ProxyPad3":{
+				"type": "reverseproxy",
+				"host": "192.168.2.247",
+                                "port": 8080
+			},
+                        "ProxyNao":{
+				"type": "reverseproxy",
+				"host": "192.168.2.107",
+                                "port": 8081
+			},
+                        "Proxy":{
+				"type": "reverseproxy",
+				"host": "localhost",
+                                "port": 8080
+			},
+			"Redirection":{
+				"type": "redirect",
+				"url": "http://localhost:8080/Mashape/WeatherAPI"
+			},
+			"ProxyGuruApis":{
+				"type": "reverseproxy",
+				"host": "api.apis.guru",
+				"path": "/v2"
+ 			},
+			"ProxyNeowsapp":{
+				"type": "reverseproxy",
+				"host": "www.neowsapp.com"
+ 			},
+			"ProxyGoogle":{
+				"type": "reverseproxy",
+				"host": "www.googleapis.com"
+ 			},
+			"ProxyMicrosoft":{
+				"type": "reverseproxy",
+				"host": "management.azure.com"
+ 			},
+			"ProxyApitore":{
+				"type": "reverseproxy",
+				"host": "api.apitore.com"
+ 			}
+		   }
+		}
+           ]
+        },
+        {
+            "type": "container",
+            "options": {
+                "pythonpath": [
+                    ".."
+                ]
+            },
+            "components": [
+                {
+                    "type": "class",
+                    "classname": "crossbar.adapter.rest.RESTCallee",
+                    "realm": "realm1",
+                    "extra": {
+                        "procedure": "com.myapp.rpi",
+                        "baseurl": "http://192.168.2.100:8080"
+                    },
+                    "transport": {
+                        "type": "websocket",
+                        "endpoint": {
+                            "type": "tcp",
+                            "host": "127.0.0.1",
+                            "port": 8008
+                        },
+                        "url": "ws://127.0.0.1:8008/ws"
+                    }
+                },
+		{
+                    "type": "class",
+                    "classname": "crossbar.adapter.rest.RESTCallee",
+                    "realm": "realm1",
+                    "extra": {
+                        "procedure": "com.myapp.httpbin",
+                        "baseurl": "http://httpbin.org"
+                    },
+                    "transport": {
+                        "type": "websocket",
+                        "endpoint": {
+                            "type": "tcp",
+                            "host": "127.0.0.1",
+                            "port": 8008
+                        },
+                        "url": "ws://127.0.0.1:8008/ws"
+                    }
+                },
+		{
+                    "type": "class",
+                    "classname": "crossbar.adapter.rest.RESTCallee",
+                    "realm": "realm1",
+                    "extra": {
+                        "procedure": "com.myapp.local",
+                        "baseurl": "http://localhost:8080"
+                    },
+                    "transport": {
+                        "type": "websocket",
+                        "endpoint": {
+                            "type": "tcp",
+                            "host": "127.0.0.1",
+                            "port": 8008
+                        },
+                        "url": "ws://127.0.0.1:8008/ws"
+                    }
+                },
+                {
+                    "type": "class",
+                    "classname": "crossbar.adapter.rest.RESTCallee",
+                    "realm": "realm1",
+                    "extra": {
+                        "procedure": "com.myapp.nao",
+                        "baseurl": "http://192.168.2.107:8081"
+                    },
+                    "transport": {
+                        "type": "websocket",
+                        "endpoint": {
+                            "type": "tcp",
+                            "host": "127.0.0.1",
+                            "port": 8008
+                        },
+                        "url": "ws://127.0.0.1:8008/ws"
+                    }
+                },
+                {
+                    "type": "class",
+                    "classname": "crossbar.adapter.rest.RESTCallee",
+                    "realm": "realm1",
+                    "extra": {
+                        "procedure": "com.myapp.pad1",
+                        "baseurl": "http://192.168.2.245:8081"
+                    },
+                    "transport": {
+                        "type": "websocket",
+                        "endpoint": {
+                            "type": "tcp",
+                            "host": "127.0.0.1",
+                            "port": 8008
+                        },
+                        "url": "ws://127.0.0.1:8008/ws"
+                    }
+                },
+                {
+                    "type": "class",
+                    "classname": "crossbar.adapter.rest.RESTCallee",
+                    "realm": "realm1",
+                    "extra": {
+                        "procedure": "com.myapp.pad2",
+                        "baseurl": "http://192.168.2.246:8080"
+                    },
+                    "transport": {
+                        "type": "websocket",
+                        "endpoint": {
+                            "type": "tcp",
+                            "host": "127.0.0.1",
+                            "port": 8008
+                        },
+                        "url": "ws://127.0.0.1:8008/ws"
+                    }
+                },
+                {
+                    "type": "class",
+                    "classname": "crossbar.adapter.rest.RESTCallee",
+                    "realm": "realm1",
+                    "extra": {
+                        "procedure": "com.myapp.mc",
+                        "baseurl": "http://192.168.2.107:8080"
+                    },
+                    "transport": {
+                        "type": "websocket",
+                        "endpoint": {
+                            "type": "tcp",
+                            "host": "127.0.0.1",
+                            "port": 8008
+                        },
+                        "url": "ws://127.0.0.1:8008/ws"
+                    }
+                }
+            ]
+        }
+    ]
+}
